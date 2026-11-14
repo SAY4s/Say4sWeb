@@ -23,12 +23,20 @@ nav a{color:var(--mut);text-decoration:none;margin-inline-start:18px;font-size:1
 nav a:hover{color:var(--gold2)}
 section{max-width:1000px;margin:0 auto;padding:70px 20px}
 .hero{text-align:center;padding-top:90px}
-.avatar{width:120px;height:120px;margin:0 auto 22px;border-radius:50%;display:grid;place-items:center;font-size:46px;font-weight:800;color:#1a1305;background:conic-gradient(from 200deg,var(--gold2),var(--gold),#8a6a2c,var(--gold2));box-shadow:0 0 60px rgba(217,184,120,.35)}
+
+/* نشان وضعیت جایگزین دایره */
+.status{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-width:min(300px,100%);margin-bottom:30px;padding:11px 28px;border-radius:999px;border:1px solid rgba(217,184,120,.35);background:linear-gradient(120deg,rgba(255,255,255,.1),rgba(255,255,255,.03));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 0 50px rgba(217,184,120,.18),inset 0 1px 0 rgba(255,255,255,.22);overflow:hidden}
+.status::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transform:skewX(-20deg);animation:shine 5s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-80px}100%{left:120%}}
+.dot{position:relative;width:9px;height:9px;border-radius:50%;background:var(--gold);flex:none}
+.dot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--gold);animation:ping 2s ease-out infinite}
+@keyframes ping{from{transform:scale(.4);opacity:1}to{transform:scale(1.4);opacity:0}}
+#phrase{font-size:14px;color:var(--gold2);letter-spacing:.5px;transition:opacity .45s ease,transform .45s ease}
+#phrase.out{opacity:0;transform:translateY(6px)}
+
 h1{font-size:clamp(40px,8vw,72px);margin:0;letter-spacing:4px;font-weight:800;background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--gold);letter-spacing:1px;margin:6px 0 20px}
 .bio{max-width:560px;margin:0 auto;padding:22px 26px;color:#cfcdd9;font-weight:300}
-.tags{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px}
-.tags span{padding:6px 16px;border-radius:999px;border:1px solid var(--line);background:var(--glass);font-size:13px;color:var(--gold2)}
 h2{text-align:center;font-size:30px;margin:0 0 6px;font-weight:600}
 .hint{text-align:center;color:var(--mut);font-size:14px;margin:0 0 40px}
 .rail{direction:ltr;display:flex;gap:26px;overflow-x:auto;scroll-snap-type:x mandatory;padding:50px calc(50% - 130px) 60px;scrollbar-width:none;cursor:grab;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%)}
@@ -54,16 +62,16 @@ h2{text-align:center;font-size:30px;margin:0 0 6px;font-weight:600}
 .btn{display:inline-block;padding:13px 34px;border-radius:999px;text-decoration:none;color:#1a1305;font-weight:800;background:linear-gradient(90deg,var(--gold2),var(--gold));box-shadow:0 10px 40px rgba(217,184,120,.3);transition:.3s;direction:ltr}
 .btn:hover{transform:translateY(-3px);box-shadow:0 14px 50px rgba(217,184,120,.5)}
 footer{text-align:center;color:var(--mut);font-size:12px;padding:20px 20px 40px}
-@media(prefers-reduced-motion:reduce){.orb,.stage{animation:none}}
+@media(prefers-reduced-motion:reduce){.orb,.status::after,.dot::after{animation:none}}
 </style>
 </head>
 <body>
 <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
 
-<nav class="glass"><b>SAY4S</b><div><a href="#about"> درباره من </a><a href="#works">نمونه کار </a><a href="#contact">تماس </a></div></nav>
+<nav class="glass"><b>SAY4S</b><div><a href="#about">درباره من</a><a href="#works">نمونه کار</a><a href="#contact">تماس</a></div></nav>
 
 <section class="hero" id="about">
-  <div class="avatar">S4</div>
+  <div class="status"><span class="dot"></span><span id="phrase">آماده‌ی ساخت پروژه‌ی بعدی</span></div>
   <h1>Say4s</h1>
   <div class="sub">توسعه‌دهنده فول‌استک</div>
   <div class="bio glass">طراحی و ساخت ربات‌های تلگرام و ابزارهای آموزشی فارسی؛ از ایده تا اجرا، با تمرکز روی تجربه‌ای روان، زیبا و راست‌چین برای کاربران ایرانی.</div>
@@ -73,7 +81,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:20px 20px 40px}
   <h2>نمونه کارها</h2>
   <p class="hint">برای دیدن کارها، با موس یا انگشت به چپ و راست بکشید</p>
   <div class="rail" id="rail"></div>
-  </section>
+</section>
 
 <section class="contact glass" id="contact">
   <h2>ارتباط با من</h2>
@@ -84,12 +92,19 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:20px 20px 40px}
 
 <script>
 (function(){
+  // ===== متن‌هایی که در نشان بالای صفحه عوض می‌شوند =====
+  var PHRASES=['آماده‌ی ساخت پروژه‌ی بعدی','ربات تلگرام، سریع و تمیز','ابزار آموزشی فارسی','وب راست‌چین، شیک و روان'];
+  var ph=document.getElementById('phrase'),pi=0;
+  setInterval(function(){
+    ph.classList.add('out');
+    setTimeout(function(){pi=(pi+1)%PHRASES.length;ph.textContent=PHRASES[pi];ph.classList.remove('out')},450);
+  },3200);
+
   // ===== سایت‌های نمونه کار: برای اضافه کردن، یک خط به این لیست اضافه کنید =====
   var WORKS=[
     {title:'Azmon', desc:'نمایشگر و مدیریت نتایج آزمون‌ها', url:'https://say4s.github.io/Azmon'},
     // {title:'نام پروژه', desc:'توضیح کوتاه', url:'https://example.com', img:'shot.jpg'},
   ];
-  // ===========================================================================
 
   var rail=document.getElementById('rail'),cards=[];
   WORKS.forEach(function(w,k){
